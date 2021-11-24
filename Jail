@@ -1,0 +1,288 @@
+-- tables
+-- Table: Bail
+CREATE TABLE Bail (
+    IdBail integer  NOT NULL,
+    Bail_Amount number(10)  NULL,
+    CONSTRAINT Bail_pk PRIMARY KEY (IdBail)
+) ;
+
+-- Table: Crime
+CREATE TABLE Crime (
+    IdCrime integer  NOT NULL,
+    Name_Of_Crime varchar2(150)  NOT NULL,
+    Crime_Degree_IdCrime_Degree integer  NOT NULL,
+    CONSTRAINT Crime_pk PRIMARY KEY (IdCrime)
+) ;
+
+-- Table: Crime_Degree
+CREATE TABLE Crime_Degree (
+    IdCrime_Degree integer  NOT NULL,
+    Degree number(15)  NOT NULL,
+    CONSTRAINT Crime_Degree_pk PRIMARY KEY (IdCrime_Degree)
+) ;
+
+-- Table: Mugshots
+CREATE TABLE Mugshots (
+    IdMugshots integer  NOT NULL,
+    Profile_Photo_Link varchar2(150)  NOT NULL,
+    Fullface_Photo_Link varchar2(150)  NOT NULL,
+    Date_Of_Making date  NOT NULL,
+    Fingerprints_Link varchar2(150)  NOT NULL,
+    Prisoner_IdPrisoner integer  NOT NULL,
+    CONSTRAINT Mugshots_pk PRIMARY KEY (IdMugshots)
+) ;
+
+-- Table: Prisoner
+CREATE TABLE Prisoner (
+    IdPrisoner integer  NOT NULL,
+    FirstName varchar2(100)  NOT NULL,
+    LastName varchar2(100)  NOT NULL,
+    Sex varchar2(5)  NOT NULL,
+    Date_Of_Birth timestamp  NOT NULL,
+    CONSTRAINT Prisoner_pk PRIMARY KEY (IdPrisoner)
+) ;
+
+-- Table: Prisoner_Bail
+CREATE TABLE Prisoner_Bail (
+    IdPrisoner_Bail integer  NOT NULL,
+    Prisoner_IdPrisoner integer  NOT NULL,
+    Bail_IdBail integer  NOT NULL,
+    CONSTRAINT Prisoner_Bail_pk PRIMARY KEY (IdPrisoner_Bail,Prisoner_IdPrisoner,Bail_IdBail)
+) ;
+
+-- Table: Prisoner_Crimes
+CREATE TABLE Prisoner_Crimes (
+    IdPrisoner_Crimes integer  NOT NULL,
+    Crime_IdCrime integer  NOT NULL,
+    IdServing_Sentence integer  NOT NULL,
+    CONSTRAINT Prisoner_Crimes_pk PRIMARY KEY (IdPrisoner_Crimes)
+) ;
+
+-- Table: Serving_Sentence
+CREATE TABLE Serving_Sentence (
+    IdServing_Sentence integer  NOT NULL,
+    "From" timestamp  NOT NULL,
+    "To" timestamp  NOT NULL,
+    Prisoner_IdPrisoner integer  NOT NULL,
+    CONSTRAINT Serving_Sentence_pk PRIMARY KEY (IdServing_Sentence)
+) ;
+
+-- foreign keys
+-- Reference: Crime_Crime_Degree (table: Crime)
+ALTER TABLE Crime ADD CONSTRAINT Crime_Crime_Degree
+    FOREIGN KEY (Crime_Degree_IdCrime_Degree)
+    REFERENCES Crime_Degree (IdCrime_Degree);
+
+-- Reference: Crimes_Serving_Sentence (table: Prisoner_Crimes)
+ALTER TABLE Prisoner_Crimes ADD CONSTRAINT Crimes_Serving_Sentence
+    FOREIGN KEY (IdServing_Sentence)
+    REFERENCES Serving_Sentence (IdServing_Sentence);
+
+-- Reference: Mugshots_Prisoner (table: Mugshots)
+ALTER TABLE Mugshots ADD CONSTRAINT Mugshots_Prisoner
+    FOREIGN KEY (Prisoner_IdPrisoner)
+    REFERENCES Prisoner (IdPrisoner);
+
+-- Reference: Prisoner_Bail_Bail (table: Prisoner_Bail)
+ALTER TABLE Prisoner_Bail ADD CONSTRAINT Prisoner_Bail_Bail
+    FOREIGN KEY (Bail_IdBail)
+    REFERENCES Bail (IdBail);
+
+-- Reference: Prisoner_Bail_Prisoner (table: Prisoner_Bail)
+ALTER TABLE Prisoner_Bail ADD CONSTRAINT Prisoner_Bail_Prisoner
+    FOREIGN KEY (Prisoner_IdPrisoner)
+    REFERENCES Prisoner (IdPrisoner);
+
+-- Reference: Prisoner_Crimes_Crime (table: Prisoner_Crimes)
+ALTER TABLE Prisoner_Crimes ADD CONSTRAINT Prisoner_Crimes_Crime
+    FOREIGN KEY (Crime_IdCrime)
+    REFERENCES Crime (IdCrime);
+
+-- Reference: Serving_Sentence_Prisoner (table: Serving_Sentence)
+ALTER TABLE Serving_Sentence ADD CONSTRAINT Serving_Sentence_Prisoner
+    FOREIGN KEY (Prisoner_IdPrisoner)
+    REFERENCES Prisoner (IdPrisoner);
+
+-- End of file.
+
+
+
+
+SELECT IDPRISONER ,
+FIRSTNAME ,
+LASTNAME ,
+SEX ,
+DATE_OF_BIRTH  FROM Prisoner;
+
+INSERT INTO Prisoner(IdPrisoner, FirstName, LastName, Sex, Date_Of_Birth)
+VALUES(1, 'Betty', 'McDose', 'F',TO_DATE('1994/01/12', 'yyyy/mm/dd'));
+INSERT INTO Prisoner(IdPrisoner, FirstName, LastName, Sex, Date_Of_Birth)
+VALUES(2, 'Josh', 'Suell', 'M',TO_DATE('2001/09/11', 'yyyy/mm/dd'));
+INSERT INTO Prisoner(IdPrisoner, FirstName, LastName, Sex, Date_Of_Birth)
+VALUES(3, 'Mathew', 'Goer', 'M',TO_DATE('1968/12/31', 'yyyy/mm/dd'));
+INSERT INTO Prisoner(IdPrisoner, FirstName, LastName, Sex, Date_Of_Birth)
+VALUES(4, 'Anna', 'Sohj', 'F',TO_DATE('2000/08/26', 'yyyy/mm/dd'));
+INSERT INTO Prisoner(IdPrisoner, FirstName, LastName, Sex, Date_Of_Birth)
+VALUES(5, 'Joy', 'Magger', 'M',TO_DATE('1988/08/01', 'yyyy/mm/dd'));
+INSERT INTO Prisoner(IdPrisoner, FirstName, LastName, Sex, Date_Of_Birth)
+VALUES(6, 'Dastin', 'Yerid', 'M',TO_DATE('2004/04/17', 'yyyy/mm/dd'));
+
+
+SELECT IDMUGSHOTS ,
+PROFILE_PHOTO_LINK ,
+FULLFACE_PHOTO_LINK ,
+DATE_OF_MAKING ,
+FINGERPRINTS_LINK ,
+PRISONER_IDPRISONER  FROM Mugshots;
+
+INSERT INTO Mugshots(IdMugshots, Profile_Photo_Link, Fullface_Photo_Link,Date_Of_Making,Fingerprints_Link,Prisoner_IdPrisoner )
+VALUES(1,'https/sdcfww1','https/sqqw2',TO_DATE('2020/05/23', 'yyyy/mm/dd'),'https/fgee1', 1);
+INSERT INTO Mugshots(IdMugshots, Profile_Photo_Link, Fullface_Photo_Link,Date_Of_Making,Fingerprints_Link,Prisoner_IdPrisoner )
+VALUES(2,'https/sdcfaw1','https/sqq12',TO_DATE('2021/01/14', 'yyyy/mm/dd'),'https/wdews43', 2 );
+INSERT INTO Mugshots(IdMugshots, Profile_Photo_Link, Fullface_Photo_Link, Date_Of_Making,Fingerprints_Link,Prisoner_IdPrisoner)
+VALUES(3,'https/jdtjs','https/aeghhheh',TO_DATE('2018/03/15', 'yyyy/mm/dd'),'https/rhjtrrrrr65',3);
+INSERT INTO Mugshots(IdMugshots, Profile_Photo_Link, Fullface_Photo_Link, Date_Of_Making,Fingerprints_Link,Prisoner_IdPrisoner)
+VALUES(4,'https/satase','https/aegwe4t',TO_DATE('2021/11/04', 'yyyy/mm/dd'),'https/wewffw75',4);
+INSERT INTO Mugshots(IdMugshots, Profile_Photo_Link, Fullface_Photo_Link,Date_Of_Making,Fingerprints_Link,Prisoner_IdPrisoner )
+VALUES(5,'https/sdcfwef1','https/kfde6',TO_DATE('2019/07/14', 'yyyy/mm/dd'),'https/wdwea4', 5 );
+INSERT INTO Mugshots(IdMugshots, Profile_Photo_Link, Fullface_Photo_Link, Date_Of_Making,Fingerprints_Link,Prisoner_IdPrisoner)
+VALUES(6,'https/ldsfs','https/ehir4',TO_DATE('2020/12/27', 'yyyy/mm/dd'),'https/adnjd',6);
+
+SELECT IDBAIL ,
+BAIL_AMOUNT  FROM Bail;
+
+INSERT INTO Bail(IdBail, Bail_Amount)
+VALUES(1, 100 );
+INSERT INTO Bail(IdBail, Bail_Amount)
+VALUES(2, 20 );
+INSERT INTO Bail(IdBail, Bail_Amount)
+VALUES(3, 100 );
+INSERT INTO Bail(IdBail, Bail_Amount)
+VALUES(4, 60 );
+INSERT INTO Bail(IdBail, Bail_Amount)
+VALUES(5, 80 );
+INSERT INTO Bail(IdBail, Bail_Amount)
+VALUES(6, 37 );
+
+
+
+SELECT IDPRISONER_BAIL ,
+PRISONER_IDPRISONER ,
+BAIL_IDBAIL  FROM Prisoner_Bail;
+
+INSERT INTO Prisoner_Bail(IdPrisoner_Bail, Prisoner_IdPrisoner, Bail_IdBail)
+VALUES(1, 1, 1);
+INSERT INTO Prisoner_Bail(IdPrisoner_Bail, Prisoner_IdPrisoner,Bail_IdBail)
+VALUES(2, 2,2);
+INSERT INTO Prisoner_Bail(IdPrisoner_Bail, Prisoner_IdPrisoner,Bail_IdBail)
+VALUES(3,3,3);
+INSERT INTO Prisoner_Bail(IdPrisoner_Bail, Prisoner_IdPrisoner,Bail_IdBail)
+VALUES(4,4,4);
+INSERT INTO Prisoner_Bail(IdPrisoner_Bail, Prisoner_IdPrisoner,Bail_IdBail)
+VALUES(5,5,5);
+INSERT INTO Prisoner_Bail(IdPrisoner_Bail, Prisoner_IdPrisoner,Bail_IdBail)
+VALUES(6,6,6);
+
+
+
+SELECT IDSERVING_SENTENCE ,
+"From" ,
+"To" ,
+PRISONER_IDPRISONER  FROM Serving_Sentence;
+
+INSERT INTO Serving_Sentence(IdServing_Sentence,"From", "To", Prisoner_IdPrisoner)
+VALUES(1,TO_DATE('2020/05/23', 'yyyy/mm/dd'),TO_DATE('2030/05/23', 'yyyy/mm/dd'),1);
+INSERT INTO Serving_Sentence(IdServing_Sentence,"From", "To",Prisoner_IdPrisoner)
+VALUES(2,TO_DATE('2021/01/14', 'yyyy/mm/dd'),TO_DATE('2026/01/14', 'yyyy/mm/dd'),2);
+INSERT INTO Serving_Sentence(IdServing_Sentence,"From", "To",Prisoner_IdPrisoner)
+VALUES(3,TO_DATE('2018/03/15', 'yyyy/mm/dd'),TO_DATE('2068/03/15', 'yyyy/mm/dd'),3);
+INSERT INTO Serving_Sentence(IdServing_Sentence,"From","To",Prisoner_IdPrisoner)
+VALUES(4,TO_DATE('2021/11/04', 'yyyy/mm/dd'),TO_DATE('2025/11/04', 'yyyy/mm/dd'),4);
+INSERT INTO Serving_Sentence(IdServing_Sentence,"From", "To",Prisoner_IdPrisoner)
+VALUES(5,TO_DATE('2019/07/14', 'yyyy/mm/dd'),TO_DATE('2023/03/15', 'yyyy/mm/dd'),5);
+INSERT INTO Serving_Sentence(IdServing_Sentence,"From","To",Prisoner_IdPrisoner)
+VALUES(6,TO_DATE('2020/12/27', 'yyyy/mm/dd'),TO_DATE('2030/12/27', 'yyyy/mm/dd'),6);
+
+
+
+SELECT IDCRIME_DEGREE ,
+DEGREE  FROM Crime_Degree;
+
+INSERT INTO Crime_Degree(IdCrime_Degree,"Degree")
+VALUES(1,4);
+INSERT INTO Crime_Degree(IdCrime_Degree,"Degree")
+VALUES(2,2);
+INSERT INTO Crime_Degree(IdCrime_Degree,"Degree")
+VALUES(3,4);
+INSERT INTO Crime_Degree(IdCrime_Degree,"Degree")
+VALUES(4,1);
+INSERT INTO Crime_Degree(IdCrime_Degree,"Degree")
+VALUES(5,3);
+INSERT INTO Crime_Degree(IdCrime_Degree,"Degree")
+VALUES(6,1);
+
+
+SELECT IDCRIME ,
+NAME_OF_CRIME ,
+CRIME_DEGREE_IDCRIME_DEGREE  FROM Crime;
+
+INSERT INTO Crime(IdCrime, Name_Of_Crime, Crime_Degree_IdCrime_Degree)
+VALUES (1,'Murder',1);
+INSERT INTO Crime(IdCrime,Name_Of_Crime, Crime_Degree_IdCrime_Degree)
+VALUES (2,'Violence',2);
+INSERT INTO Crime(IdCrime,Name_Of_Crime, Crime_Degree_IdCrime_Degree)
+VALUES (3,'Murder',3);
+INSERT INTO Crime(IdCrime,Name_Of_Crime, Crime_Degree_IdCrime_Degree)
+VALUES (4,'Corruption',4);
+INSERT INTO Crime(IdCrime,Name_Of_Crime, Crime_Degree_IdCrime_Degree)
+VALUES (5,'Violence',5);
+INSERT INTO Crime(IdCrime,Name_Of_Crime, Crime_Degree_IdCrime_Degree)
+VALUES (6,'Murder',6);
+
+
+
+SELECT IDPRISONER_CRIMES ,
+CRIME_IDCRIME ,
+IDSERVING_SENTENCE  FROM Prisoner_Crimes;
+
+
+INSERT INTO Prisoner_Crimes(IdPrisoner_Crimes,Crime_IdCrime, IdServing_Sentence)
+VALUES(1,1,1);
+INSERT INTO Prisoner_Crimes(IdPrisoner_Crimes,Crime_IdCrime, IdServing_Sentence)
+VALUES(2,2,2);
+INSERT INTO Prisoner_Crimes(IdPrisoner_Crimes,Crime_IdCrime, IdServing_Sentence)
+VALUES(3,3,3);
+INSERT INTO Prisoner_Crimes(IdPrisoner_Crimes,Crime_IdCrime, IdServing_Sentence)
+VALUES(4,4,4);
+INSERT INTO Prisoner_Crimes(IdPrisoner_Crimes,Crime_IdCrime, IdServing_Sentence)
+VALUES(5,5,5);
+INSERT INTO Prisoner_Crimes(IdPrisoner_Crimes,Crime_IdCrime, IdServing_Sentence)
+VALUES(6,6,6);
+
+
+--Join which return info about Prisoner, who have ability to leave the prison if they'll pay bail between 50 to 100 thousand doll or who is a woman
+
+SELECT  Prisoner.FirstName, Prisoner.LastName, Bail.Bail_Amount, Prisoner.Sex FROM Prisoner
+LEFT JOIN Prisoner_Bail ON Prisoner_Bail.Prisoner_IdPrisoner = Prisoner.IdPrisoner
+LEFT JOIN Bail ON Prisoner_Bail.Bail_IdBail = Bail.IdBail
+WHERE Bail_Amount BETWEEN 50 AND  100 OR Sex='F';
+
+--Join with GROUP BY AND HAVING: Return Prisoner Data, but those,whose Term in Prison will end between 2025 and 20028 year
+
+SELECT IdPrisoner, FirstName, LastName, "To" FROM Prisoner 
+INNER JOIN Serving_Sentence ON Serving_Sentence.Prisoner_IdPrisoner = Prisoner.IdPrisoner
+GROUP BY IdPrisoner, FirstName, LastName, "To"
+HAVING "To" BETWEEN TO_DATE('2025/01/01', 'yyyy/mm/dd') AND TO_DATE('2028/12/31', 'yyyy/mm/dd');
+
+--Subquery:Return Date Of Making Mugshot by Prisoner, which was made between 2019 and 2021 year
+
+SELECT Prisoner.FirstName, Prisoner.LastName, Mugshots.Date_Of_Making FROM Prisoner, Mugshots
+WHERE Prisoner.IdPrisoner = Mugshots.Prisoner_IdPrisoner 
+AND Mugshots.Date_Of_Making =
+(SELECT Date_Of_Making FROM Mugshots 
+WHERE Date_Of_Making  BETWEEN TO_DATE('2019/01/01', 'yyyy/mm/dd') AND TO_DATE('2021/01/01', 'yyyy/mm/dd'));
+   
+--Correlated subquery:Return the oldest prisoner from the Prisoner table 
+SELECT IdPrisoner, FirstName,LastName, Date_Of_Birth FROM Prisoner 
+WHERE Date_Of_Birth=(
+  SELECT MIN(Date_Of_Birth) FROM Prisoner);
